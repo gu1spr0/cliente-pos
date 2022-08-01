@@ -2,13 +2,15 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": "./src",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "strictPropertyInitialization": false,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
+    "noImplicitThis": false,
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "declaration": false,
@@ -21,9 +23,22 @@
     "lib": [
       "es2020",
       "dom"
+    ],
+    "paths": {
+      "@Services/*": ["app/services/*"],
+      "@Models/*": ["app/models/*"],
+      "@Components/*": ["app/@components/*"],
+      "@Pages/*":["app/pages/*"],
+      "@Env/*": ["environments/*"]
+    },
+    "plugins": [
+      {
+        "name": "@angular/language-service"
+      }
     ]
   },
   "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
