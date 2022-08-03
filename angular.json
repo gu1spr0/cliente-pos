@@ -69,7 +69,7 @@
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environments.cert.ts"
+                  "with": "src/environments/environment.cert.ts"
                 }
               ],
               "outputPath": "dist/cert",
