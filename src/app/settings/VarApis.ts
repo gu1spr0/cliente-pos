@@ -2,16 +2,13 @@ import { environment } from '@Env/environment';
 export class VarApis {
   static URL_API = environment.Url;
   //ENDPOINTS API REST
-  static URL_LOGIN = `${VarApis.URL_API}/login`;
-  static URL_DOMAINS = `${VarApis.URL_API}/domains`;
-  static URL_USERS = `${VarApis.URL_API}/users`;
-  static URL_RESOURCES = `${VarApis.URL_API}/resources`;
-  static URL_ROUTES = `${VarApis.URL_API}/routes`;
-  static URL_ROLES = `${VarApis.URL_API}/roles`;
+  static URL_LOGIN = `${VarApis.URL_API}/api/login`;
+  static URL_LOGOUT = `${VarApis.URL_API}/api/logout`;
   //ENDPOINTS API WEBSOCKET
-  static MSG_INIT = `${VarApis.URL_API}/pos`
-  static MSG_PAY = `${VarApis.URL_API}/register`;
-  static MSG_CONNECT = `${VarApis.URL_API}/unregister`;
-  static MSG_DISCONNECT = `${VarApis.URL_API}/operation`;
-  static MSG_ESTABLISHED = `${VarApis.URL_API}/connectivity`;
+  static MSG_PRINCIPAL = `${VarApis.URL_API}/pos`
+  static MSG_INIT = '/app/init';
+  static MSG_CHIP = '/app/chip';
+  static MSG_CONTACTLESS = '/app/contactless';
+  static MSG_CANCEL = '/app/cancel';
+  static MSG_CLOSE = '/app/close';
 }

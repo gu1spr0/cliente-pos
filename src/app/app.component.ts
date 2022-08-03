@@ -1,40 +1,151 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from '@Services/authentication.service';
+import { PaymentService } from '@Services/payment.service';
 import { WebsocketService } from '@Services/websocket.service';
-
+import {
+  Init,
+  Chip,
+  Contactless,
+  Cancel,
+  Close,
+  Suscribir,
+} from './interface/index.payment';
+import { Login } from 'app/interface/index.api';
+import { Item } from '@Interface/item-interface';
+import { ToastService } from '@Services/toast.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'front-pos';
+  vMonto = 0;
+  vTransaccion = 0;
+  vTipo: Item[];
+  vInicial = 'Seleccione opción';
+  public vSeleccion: number = 0;
   constructor(
-    private socket: WebsocketService,
-  ){
-    console.log("Iniciando websocket");
-    let token = "eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6Ilt7XCJhdXRob3JpdHlcIjpcIlJPTEVfUEFSUVVFT1wifV0iLCJzdWIiOiJraW9zY28iLCJpYXQiOjE2NTkzNjYzMjgsImV4cCI6MTY1OTM2OTkyOH0.7Y_gtHW7ZIo6b1Sp0jUG-RrW36FS_RTiymTSEs4oDCI1sBfmcOzdCmrlvQhyOJItd2mdjfdJTt2sJVrqmTfrBA"
-    let stompClient = this.socket.connect();
-      stompClient.connect({"X-Authorization":"Bearer "+token}, (frame: any) => {
-        //stompClient.subscribe('/topic/'+api.getUserAgency()+'/'+api.getUserChannel(), (notifications: any) => {
-        stompClient.subscribe(`/user/kiosco/msg/1`, (notifications: any) => {
-          console.log(JSON.stringify(notifications.body))
-          //this.showGreeting(notifications);
-        });
+    private _auth: AuthenticationService,
+    private _payment: PaymentService,
+    private _toast: ToastService
+  ) {
+    //Solicitamos token
+    let data: Login = {
+      username: 'kiosco',
+      password: '12345',
+    };
+    this._auth.login(data);
+    let token = this._auth.getUserToken();
+    //Nos conectamos y suscribimos
+    if (token) {
+      let subscribir: Suscribir = {
+        token: token,
+        username: this._auth.getUsername()!,
+        idCommerce: Number(this._auth.getCommerce()),
+        idBranch: Number(this._auth.getBranch()),
+        idKiosk: Number(this._auth.getKiosk()),
+        idDevice: Number(this._auth.getDevice()),
+      };
+      this._payment.conectar(subscribir);
+    }
+  }
+  ngOnInit() {
+    this.vTipo = [
+      { label: 'Inicialización', value: 1 },
+      { label: 'Pago con chip', value: 2 },
+      { label: 'Pago sin contacto', value: 3 },
+      { label: 'Cancelar', value: 4 },
+      { label: 'Cierre de caja', value: 5 },
+    ];
+  }
+
+  onKeyMonto(event: any) {
+    this.vMonto = Number(event.target.value);
+  }
+
+  onKeyTransaction(event: any) {
+    this.vTransaccion = Number(event.target.value);
+  }
+
+  pagar() {
+    switch (this.vSeleccion) {
+      case 1:
         /**
-         * 1 -> INIT
-         * 2 -> CHIP
-         * 4 -> CTL
-         * 6 -> DELETED
-         * 8 -> CLOSE
+         * Inicialización de POS
          */
-        stompClient.send('/app/pay', {}, JSON.stringify(
-          {'token': token,
-          'idKiosc': 1,
-          'idDevice':1,
-          'amount':2,
-          'transaction':250,
-          'confirmClose':1,
-          'type':4}));
-      });
+        let init: Init = {
+          token: this._auth.getUserToken()!,
+          idKiosk: Number(this._auth.getKiosk()),
+          confirm: true,
+          multi: false,
+        };
+        this._payment.sendInit(init);
+        break;
+      case 2:
+        /**
+         * Pago con chip
+         */
+        if (this.vMonto != 0 && this.vMonto != null) {
+          let chip: Chip = {
+            token: this._auth.getUserToken()!,
+            idKiosk: Number(this._auth.getKiosk()),
+            amount: this.vMonto,
+            multi: false,
+          };
+          this._payment.sendChip(chip);
+        }
+        break;
+      case 3:
+        /**
+         * Pago sin contacto
+         */
+        if (this.vMonto != 0 && this.vMonto != null) {
+          let contactless: Contactless = {
+            token: this._auth.getUserToken()!,
+            idKiosk: Number(this._auth.getKiosk()),
+            amount: this.vMonto,
+            multi: false,
+          };
+          this._payment.sendContactless(contactless);
+        }
+        break;
+      case 4:
+        /**
+         * Cancelar de pago
+         */
+        if(this.vTransaccion >= 0){
+          let cancel: Cancel = {
+            token: this._auth.getUserToken()!,
+            idKiosk: Number(this._auth.getKiosk()),
+            idTransaction: this.vTransaccion,
+            multi: false,
+          };
+          this._payment.sendCancel(cancel);
+        }
+        break;
+      case 5:
+        /**
+         * Cierre de lote
+         */
+        let close: Close = {
+          token: this._auth.getUserToken()!,
+          idKiosk: Number(this._auth.getKiosk()),
+          confirm: true,
+          multi: false,
+        };
+        this._payment.sendClose(close);
+        break;
+      default:
+        /**
+         * Ninguna opción
+         */
+        this._toast.warning('Operación no válida');
+        break;
+    }
+  }
+  select(data: string){
+    console.log(">>>>>>>>>>>>>>>>>>>>"+data);
+    this.vSeleccion = Number(data);
   }
 }

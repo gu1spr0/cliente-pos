@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Stomp } from '@stomp/stompjs';
-import { VarApis } from 'app/settings/VarApis';
+import { VarApis } from 'app/settings/index.var';
 import * as SockJS from 'sockjs-client';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebsocketService {
-  private url = VarApis.MSG_INIT;
+  private url = VarApis.MSG_PRINCIPAL;
   clientStomp: any;
   constructor() { }
   public connect(){

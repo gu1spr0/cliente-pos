@@ -26,10 +26,9 @@
     ],
     "paths": {
       "@Services/*": ["app/services/*"],
-      "@Models/*": ["app/models/*"],
-      "@Components/*": ["app/@components/*"],
       "@Pages/*":["app/pages/*"],
-      "@Env/*": ["environments/*"]
+      "@Env/*": ["environments/*"],
+      "@Interface/*": ["app/interface/*"]
     },
     "plugins": [
       {

@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    Url: "https://pos.datec.com:3701"
+    Url: "http://161.35.119.130:4701"
   };
   
