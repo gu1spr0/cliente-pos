@@ -22,6 +22,7 @@ export class PaymentService {
 
   conectar(data: Suscribir) {
     if (data.token) {
+      this.stompClient.debug = function(){};
       this.stompClient.connect(
         { 'X-Authorization': 'Bearer ' + data.token },
         (frame: any) => {

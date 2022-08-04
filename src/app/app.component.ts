@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '@Services/authentication.service';
 import { PaymentService } from '@Services/payment.service';
-import { WebsocketService } from '@Services/websocket.service';
 import {
   Init,
   Chip,
@@ -144,10 +143,8 @@ export class AppComponent implements OnInit {
         this._toast.warning('Operación no válida');
         break;
     }
-    this._auth.logout();
   }
   select(data: string){
-    console.log(">>>>>>>>>>>>>>>>>>>>"+data);
     this.vSeleccion = Number(data);
   }
 }
