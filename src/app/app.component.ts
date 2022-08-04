@@ -13,6 +13,7 @@ import {
 import { Login } from 'app/interface/index.api';
 import { Item } from '@Interface/item-interface';
 import { ToastService } from '@Services/toast.service';
+import { environment } from '@Env/environment';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -32,8 +33,8 @@ export class AppComponent implements OnInit {
   ) {
     //Solicitamos token
     let data: Login = {
-      username: 'kiosco',
-      password: '12345',
+      username: environment.usuario,
+      password: environment.passoword,
     };
     this._auth.login(data);
     let token = this._auth.getUserToken();

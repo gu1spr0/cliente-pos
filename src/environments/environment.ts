@@ -5,6 +5,8 @@
 export const environment = {
   production: false,
   Url: 'http://localhost:4701',
+  usuario: "kiosco",
+  passoword: "12345"
 };
 
 /*
