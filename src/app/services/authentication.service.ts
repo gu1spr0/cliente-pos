@@ -25,8 +25,22 @@ export class AuthenticationService {
         this.sessionStart(response);
         setTimeout(() => {
           this._toast.success(response.message);
-        }, 500);
+        }, 300);
       })
+  }
+
+  /**
+   * Salir de la aplicación
+   */
+  logout() {
+    this._api
+      .putDataValues(VarApis.URL_LOGIN, null)
+      .subscribe(response => {
+        setTimeout(() => {
+          this._toast.info("Cerraste sesión");
+        }, 300)
+      })
+      localStorage.clear();
   }
 
   /**
@@ -46,9 +60,9 @@ export class AuthenticationService {
   /**
    * Salir de la aplicación
    */
-  logout() {
+  /*logout() {
     localStorage.clear();
-  }
+  }*/
 
   /**
    * Verificamos si el usuario está logueado

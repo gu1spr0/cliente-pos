@@ -144,6 +144,7 @@ export class AppComponent implements OnInit {
         this._toast.warning('Operación no válida');
         break;
     }
+    this._auth.logout();
   }
   select(data: string){
     console.log(">>>>>>>>>>>>>>>>>>>>"+data);

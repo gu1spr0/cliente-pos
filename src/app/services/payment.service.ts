@@ -40,6 +40,7 @@ export class PaymentService {
     }
   }
 
+
   sendInit(init: Init) {
     setTimeout(() => {
       this.stompClient.send(VarApis.MSG_INIT, {}, JSON.stringify(init));
