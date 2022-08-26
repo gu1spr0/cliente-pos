@@ -4,5 +4,4 @@ export interface Suscribir {
     idCommerce: number;
     idBranch: number;
     idKiosk: number;
-    idDevice: number;
 }

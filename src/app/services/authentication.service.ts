@@ -51,9 +51,6 @@ export class AuthenticationService {
     localStorage.setItem(VarLocalStorage.TOKEN, response.data.token);
     localStorage.setItem(VarLocalStorage.USERNAME, response.data.username);
     localStorage.setItem(VarLocalStorage.COMMERCE, response.data.idCommerce);
-    localStorage.setItem(VarLocalStorage.BRANCH, response.data.idBranch);
-    localStorage.setItem(VarLocalStorage.KIOSK, response.data.idKiosk);
-    localStorage.setItem(VarLocalStorage.DEVICE, response.data.idDevice);
 
   }
 
@@ -95,29 +92,4 @@ export class AuthenticationService {
   getCommerce() {
     return localStorage.getItem(VarLocalStorage.COMMERCE);
   }
-
-  /**
-   * Obtener la sucursal del usuario
-   * @returns sucursal
-   */
-  getBranch() {
-    return localStorage.getItem(VarLocalStorage.BRANCH);
-  }
-
-  /**
-   * Obtener el kiosco del usuario
-   * @returns kiosco
-   */
-  getKiosk() {
-    return localStorage.getItem(VarLocalStorage.KIOSK);
-  }
-
-  /**
-   * Obtener el dispositivo del usuario
-   * @returns dispositivo
-   */
-  getDevice() {
-    return localStorage.getItem(VarLocalStorage.DEVICE);
-  }
-
 }

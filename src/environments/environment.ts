@@ -5,10 +5,11 @@
 export const environment = {
   production: false,
   Url: 'http://localhost:4701',
-  usuario: "kiosco",
-  passoword: "12345"
+  usuario: "greentower",
+  passoword: "12345",
+  idBranch:2,
+  idKiosco: 2
 };
-
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

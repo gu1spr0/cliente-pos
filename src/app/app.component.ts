@@ -21,6 +21,8 @@ import { environment } from '@Env/environment';
 export class AppComponent implements OnInit {
   title = 'front-pos';
   vMonto = 0;
+  vIdKiosco = 0;
+  vIdBranch = 0;
   vTransaccion = 0;
   vTipo: Item[];
   vInicial = 'Seleccione opción';
@@ -31,23 +33,27 @@ export class AppComponent implements OnInit {
     private _toast: ToastService
   ) {
     //Solicitamos token
+    let vUsername = environment.usuario;
+    let vPassword = environment.passoword;
     let data: Login = {
-      username: environment.usuario,
-      password: environment.passoword,
+      username: vUsername,
+      password: vPassword,
     };
-    this._auth.login(data);
+    this._auth.login(data)
+
     let token = this._auth.getUserToken();
     //Nos conectamos y suscribimos
     if (token) {
-      let subscribir: Suscribir = {
+      this.vIdKiosco = environment.idKiosco;
+      this.vIdBranch = environment.idBranch;
+      let data: Suscribir = {
         token: token,
         username: this._auth.getUsername()!,
         idCommerce: Number(this._auth.getCommerce()),
-        idBranch: Number(this._auth.getBranch()),
-        idKiosk: Number(this._auth.getKiosk()),
-        idDevice: Number(this._auth.getDevice()),
+        idBranch: this.vIdBranch,
+        idKiosk: this.vIdKiosco
       };
-      this._payment.conectar(subscribir);
+      this._payment.conectar(data);
     }
   }
   ngOnInit() {
@@ -76,7 +82,7 @@ export class AppComponent implements OnInit {
          */
         let init: Init = {
           token: this._auth.getUserToken()!,
-          idKiosk: Number(this._auth.getKiosk()),
+          idKiosk: this.vIdKiosco,
           confirm: true,
           multi: false,
         };
@@ -89,7 +95,7 @@ export class AppComponent implements OnInit {
         if (this.vMonto != 0 && this.vMonto != null) {
           let chip: Chip = {
             token: this._auth.getUserToken()!,
-            idKiosk: Number(this._auth.getKiosk()),
+            idKiosk: this.vIdKiosco,
             amount: this.vMonto,
             multi: false,
           };
@@ -103,7 +109,7 @@ export class AppComponent implements OnInit {
         if (this.vMonto != 0 && this.vMonto != null) {
           let contactless: Contactless = {
             token: this._auth.getUserToken()!,
-            idKiosk: Number(this._auth.getKiosk()),
+            idKiosk: this.vIdKiosco,
             amount: this.vMonto,
             multi: false,
           };
@@ -114,10 +120,10 @@ export class AppComponent implements OnInit {
         /**
          * Cancelar de pago
          */
-        if(this.vTransaccion >= 0){
+        if (this.vTransaccion >= 0) {
           let cancel: Cancel = {
             token: this._auth.getUserToken()!,
-            idKiosk: Number(this._auth.getKiosk()),
+            idKiosk: this.vIdKiosco,
             idTransaction: this.vTransaccion,
             multi: false,
           };
@@ -130,7 +136,7 @@ export class AppComponent implements OnInit {
          */
         let close: Close = {
           token: this._auth.getUserToken()!,
-          idKiosk: Number(this._auth.getKiosk()),
+          idKiosk: this.vIdKiosco,
           confirm: true,
           multi: false,
         };
@@ -144,7 +150,7 @@ export class AppComponent implements OnInit {
         break;
     }
   }
-  select(data: string){
+  select(data: string) {
     this.vSeleccion = Number(data);
   }
 }

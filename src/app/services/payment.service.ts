@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AuthenticationService } from '@Services/authentication.service';
 import { ToastService } from '@Services/toast.service';
 import { WebsocketService } from '@Services/websocket.service';
 import {
@@ -22,16 +21,19 @@ export class PaymentService {
 
   conectar(data: Suscribir) {
     if (data.token) {
-      this.stompClient.debug = function(){};
+      //this.stompClient.debug = function(){};
       this.stompClient.connect(
         { 'X-Authorization': 'Bearer ' + data.token },
         (frame: any) => {
-          let cadenaSubs = `/user/${data.username}/msg/${data.idCommerce}/${data.idBranch}/${data.idKiosk}/${data.idDevice}`;
+          let cadenaSubs = `/user/${data.username}/msg/${data.idCommerce}/${data.idBranch}/${data.idKiosk}`;
           this.stompClient.subscribe(cadenaSubs, (notifications: any) => {
             setTimeout(() => {
               this._toast.info(notifications.body);
             }, 300);
           });
+          this._toast.success(
+            'Conectado correctamente al servicio de pago POS'
+          );
         }
       );
     } else {
@@ -40,7 +42,6 @@ export class PaymentService {
       }, 300);
     }
   }
-
 
   sendInit(init: Init) {
     setTimeout(() => {

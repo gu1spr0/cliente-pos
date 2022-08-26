@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
-    "start": "ng s -o --port 3001",
+    "start": "ng s -o --port 3000",
     "start1": "ng s -o --port 3002 -c=desa",
     "start2": "ng s -o --port 3001 -c=production",
     "start3": "ng s -o --port 3001 -c=qa",
