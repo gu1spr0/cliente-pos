@@ -7,8 +7,8 @@ export const environment = {
   Url: 'http://localhost:4701',
   usuario: "greentower",
   passoword: "12345",
-  idBranch:2,
-  idKiosco: 2
+  idBranch:1,
+  idKiosco: 1
 };
 /*
  * For easier debugging in development mode, you can import the following file
