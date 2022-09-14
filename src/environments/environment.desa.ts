@@ -1,9 +1,9 @@
 export const environment = {
     production: true,
     /*Url: "http://161.35.119.130:4701",
-    usuario: "kiosco",
+    usuario: "glorimar",
     passoword: "12345"*/
-    Url: 'http://161.35.119.130:4701',
+    Url: 'https://www.yoris.cloud:4701',
     usuario: "glorimar",
     passoword: "12345",
     idBranch:2,
