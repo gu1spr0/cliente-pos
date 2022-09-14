@@ -20,6 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "outputHashing": "all",
             "outputPath": "dist/front-pos",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -36,64 +37,6 @@
             "scripts": []
           },
           "configurations": {
-            "production": {
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ],
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "outputPath": "dist/prod",
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
-            },
-            "cert":{
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.cert.ts"
-                }
-              ],
-              "outputPath": "dist/cert",
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
-            },
             "desa":{
               "fileReplacements": [
                 {
@@ -122,38 +65,8 @@
                   "maximumError": "10kb"
                 }
               ]
-            },
-            "qa": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.qa.ts" 
-                }
-              ],
-              "outputPath": "dist/qa",
-              "buildOptimizer": true,
-              "optimization": false,
-              "outputHashing": "all",
-              "aot": true,
-              "vendorChunk": false,
-              "extractLicenses": true,
-              "sourceMap": true,
-              "namedChunks": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
             }
-          },
-          "defaultConfiguration": "desa"
+          }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -161,20 +74,10 @@
             "browserTarget": "front-pos:build"
           },
           "configurations": {
-            "production": {
-              "browserTarget": "front-pos:build:production"
-            },
-            "cert":{
-              "browserTarget": "front-pos:build:cert"
-            },
             "desa": {
               "browserTarget": "front-pos:build:desa"
-            },
-            "qa": {
-              "browserTarget": "front-pos:build:qa"
             }
-          },
-          "defaultConfiguration": "desa"
+          }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

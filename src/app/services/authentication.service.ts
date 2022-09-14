@@ -3,44 +3,51 @@ import { VarApis, VarLocalStorage } from 'app/settings/index.var';
 import { ApiService } from '@Services/api.service';
 import { Login } from '@Interface/index.api';
 import { ToastService } from '@Services/toast.service';
+import { environment } from '@Env/environment';
+import { Suscribir } from '@Interface/subscribe-interface';
+import { PaymentService } from './payment.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthenticationService {
-
   constructor(
     private _api: ApiService,
-    private _toast: ToastService
-  ) { }
+    private _toast: ToastService,
+    private _payment: PaymentService) {}
 
   /**
    * Login username y password
    * @param login Objeto
    */
   login(login: Login) {
-    this._api
-      .postDataValues(VarApis.URL_LOGIN, login)
-      .subscribe(response => {
+    this._api.postDataValues(VarApis.URL_LOGIN, login).subscribe((response) => {
+      if (response) {
         this.sessionStart(response);
-        setTimeout(() => {
-          this._toast.success(response.message);
-        }, 300);
-      })
+        let vIdKiosco = environment.idKiosco;
+        let vIdBranch = environment.idBranch;
+        let data: Suscribir = {
+          token: this.getUserToken()!,
+          username: this.getUsername()!,
+          idCommerce: Number(this.getCommerce()),
+          idBranch: vIdBranch,
+          idKiosk: vIdKiosco,
+        };
+        this._payment.inicializarSocket(data);
+      }
+    });
   }
 
   /**
    * Salir de la aplicación
    */
   logout() {
-    this._api
-      .putDataValues(VarApis.URL_LOGIN, null)
-      .subscribe(response => {
-        setTimeout(() => {
-          this._toast.info("Cerraste sesión");
-        }, 300)
-      })
-      localStorage.clear();
+    this._api.putDataValues(VarApis.URL_LOGIN, null).subscribe((response) => {
+      setTimeout(() => {
+        this._toast.info('Cerraste sesión');
+      }, 300);
+    });
+    localStorage.clear();
   }
 
   /**
@@ -51,7 +58,6 @@ export class AuthenticationService {
     localStorage.setItem(VarLocalStorage.TOKEN, response.data.token);
     localStorage.setItem(VarLocalStorage.USERNAME, response.data.username);
     localStorage.setItem(VarLocalStorage.COMMERCE, response.data.idCommerce);
-
   }
 
   /**

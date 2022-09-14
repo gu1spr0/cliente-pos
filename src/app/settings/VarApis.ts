@@ -1,6 +1,6 @@
 import { environment } from '@Env/environment';
 export class VarApis {
-  static URL_API = environment.Url;
+  static URL_API = environment.url;
   //ENDPOINTS API REST
   static URL_LOGIN = `${VarApis.URL_API}/api/login`;
   static URL_LOGOUT = `${VarApis.URL_API}/api/logout`;

@@ -6,13 +6,13 @@ import {
   Chip,
   Contactless,
   Cancel,
-  Close,
-  Suscribir,
+  Close
 } from './interface/index.payment';
 import { Login } from 'app/interface/index.api';
 import { Item } from '@Interface/item-interface';
 import { ToastService } from '@Services/toast.service';
 import { environment } from '@Env/environment';
+import { BlockUIService } from 'ng-block-ui';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -32,29 +32,16 @@ export class AppComponent implements OnInit {
     private _payment: PaymentService,
     private _toast: ToastService
   ) {
+    this.vIdKiosco = environment.idKiosco;
+    this.vIdBranch = environment.idBranch;
     //Solicitamos token
     let vUsername = environment.usuario;
-    let vPassword = environment.passoword;
-    let data: Login = {
+    let vPassword = environment.password;
+    let login: Login = {
       username: vUsername,
       password: vPassword,
     };
-    this._auth.login(data)
-
-    let token = this._auth.getUserToken();
-    //Nos conectamos y suscribimos
-    if (token) {
-      this.vIdKiosco = environment.idKiosco;
-      this.vIdBranch = environment.idBranch;
-      let data: Suscribir = {
-        token: token,
-        username: this._auth.getUsername()!,
-        idCommerce: Number(this._auth.getCommerce()),
-        idBranch: this.vIdBranch,
-        idKiosk: this.vIdKiosco
-      };
-      this._payment.conectar(data);
-    }
+    this._auth.login(login);
   }
   ngOnInit() {
     this.vTipo = [
@@ -152,5 +139,9 @@ export class AppComponent implements OnInit {
   }
   select(data: string) {
     this.vSeleccion = Number(data);
+  }
+
+  ngOnDestroy() {
+    this._payment.closeSocket();
   }
 }

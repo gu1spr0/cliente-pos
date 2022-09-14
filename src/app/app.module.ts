@@ -10,9 +10,13 @@ import { ToastService } from '@Services/toast.service';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { BlockUIHttpModule } from 'ng-block-ui/http';
+import { BlockUIModule } from 'ng-block-ui';
+import { BlockTemplateComponent } from './@component/block-template';
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    BlockTemplateComponent
   ],
   imports: [
     BrowserModule,
@@ -24,7 +28,13 @@ import { FormsModule } from '@angular/forms';
       preventDuplicates: true,
       closeButton: true
     }),
-    FormsModule
+    FormsModule,
+    BlockUIHttpModule.forRoot({
+      blockAllRequestsInProgress: true
+    }),
+    BlockUIModule.forRoot({
+      template: BlockTemplateComponent
+    })
   ],
   providers: [
     ApiService,

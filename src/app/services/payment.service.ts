@@ -15,32 +15,44 @@ import { VarApis } from 'app/settings/index.var';
 })
 export class PaymentService {
   stompClient: any;
-  constructor(private _socket: WebsocketService, private _toast: ToastService) {
+  constructor(
+    private _socket: WebsocketService,
+    private _toast: ToastService) {
     this.stompClient = this._socket.connect();
   }
 
-  conectar(data: Suscribir) {
+  inicializarSocket(data: Suscribir) {
     if (data.token) {
-      //this.stompClient.debug = function(){};
       this.stompClient.connect(
         { 'X-Authorization': 'Bearer ' + data.token },
         (frame: any) => {
-          let cadenaSubs = `/user/${data.username}/msg/${data.idCommerce}/${data.idBranch}/${data.idKiosk}`;
-          this.stompClient.subscribe(cadenaSubs, (notifications: any) => {
-            setTimeout(() => {
-              this._toast.info(notifications.body);
-            }, 300);
-          });
-          this._toast.success(
-            'Conectado correctamente al servicio de pago POS'
-          );
+          if (!this.stompClient) {
+            return;
+          }
+          setTimeout(() => {
+            this._toast.info("Servicio iniciado!");
+          }, 300);
+          this._subscribeTopic(data);
         }
       );
-    } else {
-      setTimeout(() => {
-        this._toast.error('No se encuentra Logueado');
-      }, 300);
     }
+  }
+
+  private _subscribeTopic(data: Suscribir) {
+    if (!this.stompClient) {
+      setTimeout(() => {
+        this._toast.error("Error al suscribirse al servicio!");
+      }, 300);
+      return;
+    }
+    let cadenaSubs = `/user/${data.username}/msg/${data.idCommerce}/${data.idBranch}/${data.idKiosk}`;
+    this.stompClient.subscribe(cadenaSubs, (notifications: any) => {
+      if(notifications.body) {
+        setTimeout(() => {
+          this._toast.success(notifications.body);
+        }, 300);
+      }
+    });
   }
 
   sendInit(init: Init) {
@@ -73,7 +85,7 @@ export class PaymentService {
     }, 3000);
   }
 
-  desconectar() {
-    this._socket._disconnect();
+  closeSocket() {
+    this.stompClient.disconnect();
   }
 }

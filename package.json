@@ -3,14 +3,9 @@
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
-    "start": "ng s -o --port 3000",
-    "start1": "ng s -o --port 3002 -c=desa",
-    "start2": "ng s -o --port 3001 -c=production",
-    "start3": "ng s -o --port 3001 -c=qa",
-    "start4": "ng s -o --port 3001 -c=cert",
-    "bdesa": "ng b --prod -c desa",
-    "bcert": "ng b --prod -c cert",
-    "bprod": "ng b --prod -c production",
+    "local": "ng s -o --port 3000",
+    "dev": "ng s -o --port 3002 -c=desa",
+    "bdev": "ng b --prod -c desa",
     "test": "ng test",
     "lint": "ng lint",
     "build": "ng build",
@@ -34,7 +29,6 @@
     "moment": "^2.29.4",
     "net": "^1.0.2",
     "ng-block-ui": "^3.0.2",
-    "ngx-bootstrap": "^9.0.0",
     "ngx-toastr": "^14.3.0",
     "rx-angular": "^1.1.3",
     "rxjs": "~7.5.0",
@@ -42,6 +36,7 @@
     "sockjs-client": "^1.6.1",
     "stompjs": "^2.3.3",
     "tslib": "^2.3.0",
+    "websocket": "^1.0.34",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {

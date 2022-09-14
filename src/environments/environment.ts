@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  Url: 'http://localhost:4701',
-  usuario: "greentower",
-  passoword: "12345",
+  url: 'http://localhost:4701',
+  usuario: "kiosco1",
+  password: "77WmJQA3jK1BkXD7qWrE",
   idBranch:1,
   idKiosco: 1
 };

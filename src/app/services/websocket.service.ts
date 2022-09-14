@@ -1,27 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Stomp } from '@stomp/stompjs';
-import { VarApis } from 'app/settings/index.var';
+import { VarApis } from '../settings/index.var';
 import * as SockJS from 'sockjs-client';
-
+import { Stomp } from '@stomp/stompjs';
 @Injectable({
   providedIn: 'root'
 })
 export class WebsocketService {
   private url = VarApis.MSG_PRINCIPAL;
-  clientStomp: any;
-  constructor() { }
-  public connect(){
-    let socket = new SockJS(this.url);
-    this.clientStomp = Stomp.over(socket);
-    return this.clientStomp;
+  constructor() {}
+  public connect() {
+    const socket = new SockJS(this.url)
+    const stompClient = Stomp.over(socket)
+    stompClient.heartbeat.incoming = 1000;
+    stompClient.heartbeat.outgoing = 1000;
+    return stompClient;
   }
-  _disconnect(){
-    if(this.clientStomp !== null){
-      this.clientStomp.disconnect();
-    }
-  }
-  onMessageReceived(message: any){
-    console.log("[Mensaje Recibido]:" + message);
-  }
-
 }
