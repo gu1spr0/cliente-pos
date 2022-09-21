@@ -5,7 +5,6 @@ import { AppComponent } from './app.component';
 import { WebsocketService } from '@Services/websocket.service';
 import { ApiService } from '@Services/api.service';
 import { AuthenticationService } from '@Services/authentication.service';
-import { PaymentService } from '@Services/payment.service';
 import { ToastService } from '@Services/toast.service';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientModule } from '@angular/common/http';
@@ -40,8 +39,7 @@ import { BlockTemplateComponent } from './@component/block-template';
     ApiService,
     ToastService,
     WebsocketService,
-    AuthenticationService,
-    PaymentService
+    AuthenticationService
   ],
   bootstrap: [AppComponent]
 })

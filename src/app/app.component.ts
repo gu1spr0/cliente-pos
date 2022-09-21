@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AuthenticationService } from '@Services/authentication.service';
-import { PaymentService } from '@Services/payment.service';
 import {
   Init,
   Chip,
@@ -13,6 +12,9 @@ import { Item } from '@Interface/item-interface';
 import { ToastService } from '@Services/toast.service';
 import { environment } from '@Env/environment';
 import { BlockUIService } from 'ng-block-ui';
+import { WebsocketService } from '@Services/websocket.service';
+import { Device } from '@Interface/index.api';
+import { Reset } from '@Interface/reset-interface';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -26,14 +28,15 @@ export class AppComponent implements OnInit {
   vTransaccion = 0;
   vTipo: Item[];
   vInicial = 'Seleccione opción';
+  vToken: any;
   public vSeleccion: number = 0;
   constructor(
     private _auth: AuthenticationService,
-    private _payment: PaymentService,
-    private _toast: ToastService
+    private _toast: ToastService,
+    private _socket: WebsocketService
   ) {
-    this.vIdKiosco = environment.idKiosco;
-    this.vIdBranch = environment.idBranch;
+    this.vIdKiosco = Number(this._auth.getKiosk());
+    this.vIdBranch = Number(this._auth.getBranch());
     //Solicitamos token
     let vUsername = environment.usuario;
     let vPassword = environment.password;
@@ -42,6 +45,7 @@ export class AppComponent implements OnInit {
       password: vPassword,
     };
     this._auth.login(login);
+    this.vToken = this._auth.getUserToken();
   }
   ngOnInit() {
     this.vTipo = [
@@ -62,79 +66,93 @@ export class AppComponent implements OnInit {
   }
 
   pagar() {
-    switch (this.vSeleccion) {
-      case 1:
-        /**
-         * Inicialización de POS
-         */
-        let init: Init = {
-          token: this._auth.getUserToken()!,
-          idKiosk: this.vIdKiosco,
-          confirm: true,
-          multi: false,
-        };
-        this._payment.sendInit(init);
-        break;
-      case 2:
-        /**
-         * Pago con chip
-         */
-        if (this.vMonto != 0 && this.vMonto != null) {
-          let chip: Chip = {
-            token: this._auth.getUserToken()!,
+    if(this.vToken) {
+      switch (this.vSeleccion) {
+        case 1:
+          /**
+           * Inicialización de POS
+           */
+          let init: Init = {
+            token: `Bearer ${this.vToken}`,
             idKiosk: this.vIdKiosco,
-            amount: this.vMonto,
+            confirm: true,
             multi: false,
           };
-          this._payment.sendChip(chip);
-        }
-        break;
-      case 3:
-        /**
-         * Pago sin contacto
-         */
-        if (this.vMonto != 0 && this.vMonto != null) {
-          let contactless: Contactless = {
-            token: this._auth.getUserToken()!,
+          this._socket.sendInit(init);
+          break;
+        case 2:
+          /**
+           * Pago con chip
+           */
+          if (this.vMonto != 0 && this.vMonto != null) {
+            let chip: Chip = {
+              token: `Bearer ${this.vToken}`,
+              idKiosk: this.vIdKiosco,
+              amount: this.vMonto,
+              multi: false,
+            };
+            this._socket.sendChip(chip);
+          }
+          break;
+        case 3:
+          /**
+           * Pago sin contacto
+           */
+          if (this.vMonto != 0 && this.vMonto != null) {
+            let contactless: Contactless = {
+              token: `Bearer ${this.vToken}`,
+              idKiosk: this.vIdKiosco,
+              amount: this.vMonto,
+              multi: false,
+            };
+            this._socket.sendContactless(contactless);
+          }
+          break;
+        case 4:
+          /**
+           * Cancelar de pago
+           */
+          if (this.vTransaccion >= 0) {
+            let cancel: Cancel = {
+              token: `Bearer ${this.vToken}`,
+              idKiosk: this.vIdKiosco,
+              idTransaction: this.vTransaccion,
+              multi: false,
+            };
+            this._socket.sendCancel(cancel);
+          }
+          break;
+        case 5:
+          /**
+           * Cierre de lote
+           */
+          let close: Close = {
+            token: `Bearer ${this.vToken}`,
             idKiosk: this.vIdKiosco,
-            amount: this.vMonto,
+            confirm: true,
             multi: false,
           };
-          this._payment.sendContactless(contactless);
-        }
-        break;
-      case 4:
-        /**
-         * Cancelar de pago
-         */
-        if (this.vTransaccion >= 0) {
-          let cancel: Cancel = {
-            token: this._auth.getUserToken()!,
-            idKiosk: this.vIdKiosco,
-            idTransaction: this.vTransaccion,
-            multi: false,
-          };
-          this._payment.sendCancel(cancel);
-        }
-        break;
-      case 5:
-        /**
-         * Cierre de lote
-         */
-        let close: Close = {
-          token: this._auth.getUserToken()!,
-          idKiosk: this.vIdKiosco,
-          confirm: true,
-          multi: false,
-        };
-        this._payment.sendClose(close);
-        break;
-      default:
-        /**
-         * Ninguna opción
-         */
-        this._toast.warning('Operación no válida');
-        break;
+          this._socket.sendClose(close);
+          break;
+        default:
+          /**
+           * Ninguna opción
+           */
+          this._toast.warning('Operación no válida');
+          break;
+      }
+    }
+  }
+
+  cancelar() {
+    if(this.vToken) {
+      let reset: Reset = {
+        token: `Bearer ${this.vToken}`,
+        idKiosk: this.vIdKiosco,
+        confirm: true,
+        multi: false,
+      };
+      this._socket.sendReset(reset);     
     }
   }
   select(data: string) {
@@ -142,6 +160,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this._payment.closeSocket();
+    this._socket.closeSocket();
   }
 }

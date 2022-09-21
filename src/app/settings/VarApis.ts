@@ -11,4 +11,5 @@ export class VarApis {
   static MSG_CONTACTLESS = '/app/contactless';
   static MSG_CANCEL = '/app/cancel';
   static MSG_CLOSE = '/app/close';
+  static MSG_RESET = '/app/reset';
 }

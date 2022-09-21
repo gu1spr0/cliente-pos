@@ -6,9 +6,7 @@ export const environment = {
   production: false,
   url: 'http://localhost:4701',
   usuario: "kiosco1",
-  password: "77WmJQA3jK1BkXD7qWrE",
-  idBranch:1,
-  idKiosco: 1
+  password: "77WmJQA3jK1BkXD7qWrE"
 };
 /*
  * For easier debugging in development mode, you can import the following file

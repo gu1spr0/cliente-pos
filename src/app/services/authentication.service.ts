@@ -5,7 +5,7 @@ import { Login } from '@Interface/index.api';
 import { ToastService } from '@Services/toast.service';
 import { environment } from '@Env/environment';
 import { Suscribir } from '@Interface/subscribe-interface';
-import { PaymentService } from './payment.service';
+import { WebsocketService } from './websocket.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,28 +14,34 @@ export class AuthenticationService {
   constructor(
     private _api: ApiService,
     private _toast: ToastService,
-    private _payment: PaymentService) {}
+    private _socket: WebsocketService
+  ) {}
 
   /**
    * Login username y password
    * @param login Objeto
    */
   login(login: Login) {
-    this._api.postDataValues(VarApis.URL_LOGIN, login).subscribe((response) => {
-      if (response) {
-        this.sessionStart(response);
-        let vIdKiosco = environment.idKiosco;
-        let vIdBranch = environment.idBranch;
-        let data: Suscribir = {
-          token: this.getUserToken()!,
-          username: this.getUsername()!,
-          idCommerce: Number(this.getCommerce()),
-          idBranch: vIdBranch,
-          idKiosk: vIdKiosco,
-        };
-        this._payment.inicializarSocket(data);
-      }
-    });
+    this._api
+      .postDataValues(VarApis.URL_LOGIN, login)
+      .subscribe((response: any) => {
+        if (response) {
+          this.sessionStart(response);
+          let vIdKiosco = response.data.idKiosk;
+          let vIdBranch = response.data.idBranch;
+          let vIdCommerce = response.data.idCommerce;
+          let vToken = response.data.token;
+          let vUsername = response.data.username;
+          let data: Suscribir = {
+            token: vToken,
+            username: vUsername,
+            idCommerce: vIdCommerce,
+            idBranch: vIdBranch,
+            idKiosk: vIdKiosco,
+          };
+          this._socket.conectar(data);
+        }
+      });
   }
 
   /**
@@ -58,6 +64,8 @@ export class AuthenticationService {
     localStorage.setItem(VarLocalStorage.TOKEN, response.data.token);
     localStorage.setItem(VarLocalStorage.USERNAME, response.data.username);
     localStorage.setItem(VarLocalStorage.COMMERCE, response.data.idCommerce);
+    localStorage.setItem(VarLocalStorage.BRANCH, response.data.idBranch);
+    localStorage.setItem(VarLocalStorage.KIOSK, response.data.idKiosk);
   }
 
   /**
@@ -97,5 +105,21 @@ export class AuthenticationService {
    */
   getCommerce() {
     return localStorage.getItem(VarLocalStorage.COMMERCE);
+  }
+
+  /**
+   * Obtener el comercio del usuario
+   * @returns comercio
+   */
+  getBranch() {
+    return localStorage.getItem(VarLocalStorage.BRANCH);
+  }
+
+  /**
+   * Obtener el comercio del usuario
+   * @returns comercio
+   */
+  getKiosk() {
+    return localStorage.getItem(VarLocalStorage.KIOSK);
   }
 }
