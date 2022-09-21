@@ -109,7 +109,7 @@
           },
           "configurations": {
             "production": {
-              "devServerTarget": "front-pos:serve:production"
+              "devServerTarget": "front-pos:serve:desa"
             }
           }
         }
