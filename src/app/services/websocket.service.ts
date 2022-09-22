@@ -9,7 +9,6 @@ import { Chip } from '@Interface/chip-interface';
 import { Contactless } from '@Interface/contactless-interface';
 import { Cancel } from '@Interface/cancel-interface';
 import { Close } from '@Interface/close-interface';
-import { Reset } from '@Interface/reset-interface';
 @Injectable({
   providedIn: 'root',
 })
@@ -26,11 +25,11 @@ export class WebsocketService {
       { 'X-Authorization': `Bearer ${data.token}` },
       (frame: any) => {
         if (!this.stompClient) {
-          this._toast.warning('Ocurrio un error!');
+          this._toast.warning('Ocurrio un error!'); //Mostrando mensaje se puede reemplazar por console.log
           return;
         }
         setTimeout(() => {
-          this._toast.info('Servicio iniciado!');
+          this._toast.info('Servicio iniciado!'); //Mostrando mensaje se puede reemplazar por console.log
         }, 300);
         this._subscribeTopic(data);
       }
@@ -77,9 +76,10 @@ export class WebsocketService {
                 this._toast.warning(respuesta.message);
               }
             }
+            //En el caso de que se requiera actualizar la pagina
             setTimeout(() => {
               window.location.reload();
-            }, 3000);
+            }, 5000);
 
             break;
         }
@@ -93,10 +93,6 @@ export class WebsocketService {
 
   sendInit(init: Init) {
     this.stompClient.send(VarApis.MSG_INIT, {}, JSON.stringify(init));
-  }
-
-  sendReset(reset: Reset) {
-    this.stompClient.send(VarApis.MSG_RESET, {}, JSON.stringify(reset));
   }
 
   sendChip(chip: Chip) {

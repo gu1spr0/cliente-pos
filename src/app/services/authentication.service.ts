@@ -3,7 +3,6 @@ import { VarApis, VarLocalStorage } from 'app/settings/index.var';
 import { ApiService } from '@Services/api.service';
 import { Login } from '@Interface/index.api';
 import { ToastService } from '@Services/toast.service';
-import { environment } from '@Env/environment';
 import { Suscribir } from '@Interface/subscribe-interface';
 import { WebsocketService } from './websocket.service';
 

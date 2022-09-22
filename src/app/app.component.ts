@@ -11,10 +11,7 @@ import { Login } from 'app/interface/index.api';
 import { Item } from '@Interface/item-interface';
 import { ToastService } from '@Services/toast.service';
 import { environment } from '@Env/environment';
-import { BlockUIService } from 'ng-block-ui';
 import { WebsocketService } from '@Services/websocket.service';
-import { Device } from '@Interface/index.api';
-import { Reset } from '@Interface/reset-interface';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -144,17 +141,6 @@ export class AppComponent implements OnInit {
     }
   }
 
-  cancelar() {
-    if(this.vToken) {
-      let reset: Reset = {
-        token: `Bearer ${this.vToken}`,
-        idKiosk: this.vIdKiosco,
-        confirm: true,
-        multi: false,
-      };
-      this._socket.sendReset(reset);     
-    }
-  }
   select(data: string) {
     this.vSeleccion = Number(data);
   }

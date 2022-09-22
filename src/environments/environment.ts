@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  url: 'https://www.yoris.cloud:4701',
-  usuario: "kiosco1",
-  password: "77WmJQA3jK1BkXD7qWrE"
+  url: 'http://localhost:4701',
+  usuario: "kiosco2",
+  password: "12345"
 };
 /*
  * For easier debugging in development mode, you can import the following file
