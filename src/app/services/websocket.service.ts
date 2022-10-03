@@ -15,6 +15,7 @@ import { Close } from '@Interface/close-interface';
 export class WebsocketService {
   private url = VarApis.MSG_PRINCIPAL;
   public stompClient: Stomp.Client;
+  public respuesta: any;
   constructor(private _toast: ToastService) {}
   public conectar(data: Suscribir) {
     let socket = new SockJS(this.url);
@@ -48,39 +49,31 @@ export class WebsocketService {
     let topicSubs = '/topic/notify';
     this.stompClient.subscribe(cadenaSubs, (notifications: any) => {
       if (notifications.body) {
-        //let respuesta : any
-        let respuesta = JSON.parse(notifications.body);
-        switch (Number(respuesta.data)) {
-          case 1:
-            this._toast.warning(respuesta.message);
-            break;
-          case 2:
-            this._toast.info(respuesta.message);
-            break;
-          case 3:
-            this._toast.warning(respuesta.message);
-            break;
-          default:
-            if (!respuesta.success) {
-              this._toast.error(respuesta.message);
-            } else {
-              if (
-                respuesta.data.codigoRespuesta == '00' &&
-                respuesta.data.codAutorizacion != null
-              ) {
-                this._toast.info(
-                  `Pago realizado: ${respuesta.data.numeroRecibo}`
-                );
-              }
-              if (respuesta.data.codigoRespuesta == '99') {
-                this._toast.warning(respuesta.message);
-              }
-            }
-            //En el caso de que se requiera actualizar la pagina
+        this.respuesta = JSON.parse(notifications.body);
+        switch (Number(this.respuesta.code)) {
+          case 0:
+            this._toast.warning(this.respuesta.message)
             setTimeout(() => {
               window.location.reload();
-            }, 5000);
-
+            },4000);
+            break;
+          case 1:
+          case 2:
+          case 3:
+          case 4:
+            this._toast.warning(this.respuesta.message);
+            break;
+          case 5:
+            this._toast.success('Pago exitoso!, gracias por su compra');
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+            break;
+          default:
+            this._toast.error('Error desconocido!')
+            setTimeout(() => {
+              window.location.reload();
+            },4000);
             break;
         }
       }

@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   url: 'http://localhost:4701',
-  usuario: "kiosco2",
-  password: "12345"
+  usuario: "glorimark3",
+  password: "$Glorimar.2022#Test"
 };
 /*
  * For easier debugging in development mode, you can import the following file
