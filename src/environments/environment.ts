@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  url: 'http://localhost:4701',
-  usuario: "glorimark3",
-  password: "$Glorimar.2022#Test"
+  url: 'https://pos.datec.com.bo:4701',
+  usuario: "iquispe",
+  password: "auYX1x7EwMkqkEvHypYR"
 };
 /*
  * For easier debugging in development mode, you can import the following file
